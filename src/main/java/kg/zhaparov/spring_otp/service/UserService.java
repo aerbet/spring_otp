@@ -34,14 +34,38 @@ public class UserService {
                 .build();
         String otp = generateOtp();
         user.setOtp(otp);
-        repository.save(user);
-        sendVerificationEmail(user.getEmail(), otp);
+        User savedUser = repository.save(user);
+        sendVerificationEmail(savedUser.getEmail(), otp);
         RegisterResponse response = RegisterResponse.builder()
                 .userName(user.getUserName())
                 .email(user.getEmail())
                 .build();
 
         return response;
+    }
+
+    public void verify(String email, String otp) {
+        User user = repository.findByEmail(email);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        if (user.isVerified()) {
+            throw new RuntimeException("User is already verified");
+        }
+        if (otp.equals(user.getOtp())) {
+            user.setVerified(true);
+            repository.save(user);
+        }
+    }
+
+    public User login(String email, String password) {
+        User user = repository.findByEmail(email);
+        if (user != null && user.isVerified() && user.getPassword().equals(password)) {
+            return user;
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 
     private String generateOtp() {

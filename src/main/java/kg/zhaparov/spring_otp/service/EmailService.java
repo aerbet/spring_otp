@@ -23,7 +23,8 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(body);
+            helper.setText(body, true);
+            mailSender.send(message);
         } catch (MessagingException me) {
             me.getMessage();
             throw new RuntimeException(me);
