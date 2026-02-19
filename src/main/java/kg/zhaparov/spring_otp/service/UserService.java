@@ -49,13 +49,13 @@ public class UserService {
 
         if (user == null) {
             throw new RuntimeException("User not found");
-        }
-        if (user.isVerified()) {
+        } else if (user.isVerified()) {
             throw new RuntimeException("User is already verified");
-        }
-        if (otp.equals(user.getOtp())) {
+        } else if (otp.equals(user.getOtp())) {
             user.setVerified(true);
             repository.save(user);
+        } else {
+            throw new RuntimeException("Bad request");
         }
     }
 
