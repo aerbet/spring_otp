@@ -10,15 +10,17 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
     private String userName;
     private String email;
     private String password;
+    @Column(nullable = false)
+    private String otp;
+    @Column(nullable = true)
     private boolean verified;
 }
